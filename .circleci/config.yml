@@ -43,9 +43,8 @@ jobs:
       - run:
           name: Build front-end
           command: |
-            # Your code here
             cd frontend
-            sudo npm install
+            npm install
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
@@ -61,7 +60,6 @@ jobs:
       - run:
           name: Back-end build
           command: |
-            # Your code here
             cd backend
             npm install
             npm run build
@@ -75,16 +73,16 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-test]
+          keys: [frontend-build]
       - run:
-          name: test front-end
+          name: Run test front-end
           command: |
             cd frontend
             npm install
             npm run test
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-test
+          key: frontend-build
                 
   test-backend:
     docker:
@@ -92,32 +90,39 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-test]
+          keys: [backend-build]
       - run:
-          name: test backend-end
+          name: Run test backend-end
           command: |
             cd backend
             npm install
             npm run test
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-test
+          key: backend-build
             
-#   scan-frontend:
-#     docker:
-#       # Docker image here
-#     steps:
-#       # Checkout code from git
-#       # Restore from cache
-#       # Your job code here
+  scan-frontend:
+    docker:
+      - image:  circleci/node:13.8.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [frontend-build]
+      - run:
+          name: Scan frontend vulnerability
+          command: |
+            cd frontend
+            npm install
+            # npm install oauth-sign@^0.9.0
+            npm audit --audit-level=critical
 
-#   scan-backend:
-#     docker:
-#       # Docker image here
-#     steps:
-#       # Checkout code from git
-#       # Restore from cache
-#       # Your job code here
+  # scan-backend:
+  #   docker:
+  #     # Docker image here
+  #   steps:
+      # Checkout code from git
+      # Restore from cache
+      # Your job code here
 
 #   deploy-infrastructure:
 #     docker:
