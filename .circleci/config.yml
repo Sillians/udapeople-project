@@ -16,7 +16,6 @@ commands:
             aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow_id>>
             aws s3 rm s3://udapeople-<<parameters.workflow_id>> --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
-            exit 1
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -226,10 +225,8 @@ jobs:
 
   run-migrations:
     docker:
-      # Docker image here that supports NodeJS
       - image: circleci/node:13.8.0
     steps:
-      # Checkout code from git
       - checkout
       - run:
           name: Install dependencies
@@ -245,8 +242,9 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            # Your code here
+            #Your code here
             cd backend
+            npm install
             npm run migrations >> migrations.txt
       - run:
           name: Send migration results to kvdb
@@ -258,7 +256,8 @@ jobs:
             fi
      # Here's where you will add some code to rollback on failure 
       - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}     
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7} 
+      - revert-migrations   
 
 #   deploy-frontend:
 #     docker:
@@ -371,9 +370,9 @@ workflows:
           requires: [build-frontend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          # filters:
-          #   branches:
-          #     only: [main]
+          filters:
+            branches:
+              only: [main]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
