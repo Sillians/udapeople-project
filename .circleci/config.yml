@@ -84,16 +84,18 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-build]
+          keys: [frontend-test]
       - run:
           name: Run test front-end
           command: |
             cd frontend
             npm install
             npm run test
+            npm audit fix
+            # npm audit fix --audit-level=critical
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-build
+          key: frontend-test
 
   test-backend:
     docker:
@@ -101,7 +103,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [backend-test]
       - run:
           name: Run test backend-end
           command: |
@@ -110,7 +112,7 @@ jobs:
             npm run test
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-build
+          key: backend-test
 
   scan-frontend:
     docker:
@@ -118,18 +120,17 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [scanfrontend-test]
+          keys: [scan-frontend]
       - run:
           name: Scan frontend vulnerability
           command: |
             cd frontend
             npm install
             # npm audit fix --audit-level=critical --force
-            # npm audit fix --audit-level=critical --force
-            # npm audit --audit-level=critical
+            npm audit --audit-level=critical
       - save_cache:
           paths: [frontend/node_modules]
-          key: scanfrontend-test
+          key: scan-frontend
 
   scan-backend:
     docker:
@@ -137,15 +138,17 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [scanbackend-build]
+          keys: [scan-backend]
       - run:
           name: Scan backend vulnerability
           command: |
             cd backend
             npm install
-            npm audit fix --audit-level=critical --force
-            npm audit fix --audit-level=critical --force
-            npm audit --audit-level=critical
+            # npm audit fix --audit-level=critical --force
+            npm audit fix --audit-level=critical
+      - save_cache:
+          paths: [backend/node_modules]
+          key: scan-backend
 
   deploy-infrastructure:
     docker:
@@ -236,16 +239,32 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - restore_cache:
+          keys: [backend-build]
+      - run:
+          name: prepare environment for backend build
+          command: |
+            echo "Preparing environment for backend build"
+            echo ENVIRONMENT=$ENVIRONMENT >> backend/.env
+            echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> backend/.env
+            echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> backend/.env
+            echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> backend/.env
+            echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS >> backend/.env
+            echo TYPEORM_HOST=$TYPEORM_HOST >> backend/.env
+            echo TYPEORM_PORT=$TYPEORM_PORT >> backend/.env
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> backend/.env
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> backend/.env
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> backend/.env
       - run:
           name: Install dependencies
           command: |
             # apk add --update --no-cache tar gzip nodejs npm aws-cli curl
             sudo apt install -y tar gzip curl nodejs
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip -qq awscliv2.zip
-            sudo ./aws/install
-      - restore_cache:
-          keys: [backend-build]
+            sudo apt update
+            sudo apt install -y awscli
+            # curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            # unzip -qq awscliv2.zip
+            # sudo ./aws/install
       - attach_workspace:
           at: ~/
       - run:
@@ -253,21 +272,32 @@ jobs:
           command: |
             cd backend
             npm install
-            npm audit fix --audit-level=critical
-            # npm run build
+            npm install typescript
+            npm --update install python3 npm
+            npm run build
+            npm run migrations:revert
+
+            # Run and sve the migration output
+            npm run migrations > migrations_dump.txt
+            cat migrations_dump.txt
             npm run migrations >> migrations_dump.txt
       - run:
           name: Send migration results to kvdb
+          working_directory: ./backend
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
               curl --insecure https://kvdb.io/Wca9dgbg3yTHHbPUBhhkbq/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - backend
      # Here's where you will add some code to rollback on failure 
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7} 
-      - revert-migrations:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      # - revert-migrations:
+      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
 #   deploy-frontend:
 #     docker:
