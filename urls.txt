@@ -1,4 +1,8 @@
 Public Url to GitHub repository (not private) [URL01]
 URL 01 = https://github.com/Sillians/udapeople-project
 
-URL 02 =  
+URL 02 = http://udapeople-f06e599.s3-website-us-east-1.amazonaws.com
+
+URL 02 = http://udapeople-194303a.s3-website.us-east-1.amazonaws.com
+
+URL 03 = 
