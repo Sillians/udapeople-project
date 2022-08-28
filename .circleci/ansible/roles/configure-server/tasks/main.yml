@@ -1,25 +1,25 @@
 ---
-- name: 'update and upgrade packages.' # sudo apt upgrade
-  become: true
-  apt:
-    upgrade: yes
-    update_cache: yes
-    cache_valid_time: 86400
+# - name: 'update and upgrade packages.' # sudo apt upgrade
+#   become: true
+#   apt:
+#     upgrade: yes
+#     update_cache: yes
+    # cache_valid_time: 86400
 
-- name: remove unneeded deps # sudo apt autoremove
-  become: true
-  apt:
-    autoremove: yes
+# - name: remove unneeded deps # sudo apt autoremove
+#   become: true
+#   apt:
+#     autoremove: yes
 
 - name:  "Add Node.js from source"
   become: true
   shell: |
     curl -sl https://deb.nodesource.com/setup_13.x | sudo -E bash -
 
-- name: install deps nodejs and npm
+- name: install node.js 13
   become: true
   apt:
-    name: ['nodejs', 'npm']
+    name: ["nodejs"]
     state: latest
     update_cache: yes
 
@@ -28,8 +28,8 @@
   npm:
     name: pm2
     global: yes
-    state: latest
-    production: yes
+    # state: latest
+    # production: yes
 
 - name:  "Move env variables to /etc/profile.d/"
   become: true
