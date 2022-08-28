@@ -1,24 +1,38 @@
 ---
 - name: 'update and upgrade packages.' # sudo apt upgrade
-  become: yes
+  become: true
   apt:
     upgrade: yes
     update_cache: yes
     cache_valid_time: 86400
+
 - name: remove unneeded deps # sudo apt autoremove
-  become: yes
+  become: true
   apt:
     autoremove: yes
-- name: install deps # sudo apt install nodejs npm
-  become: yes
+
+- name:  "Add Node.js from source"
+  become: true
+  shell: |
+    curl -sl https://deb.nodesource.com/setup_13.x | sudo -E bash -
+
+- name: install deps nodejs and npm
+  become: true
   apt:
     name: ['nodejs', 'npm']
     state: latest
     update_cache: yes
-- name: install pm2 # sudo npm install pm2 -g
-  become: yes
+
+- name: install pm2
+  become: true
   npm:
     name: pm2
     global: yes
     state: latest
     production: yes
+
+- name:  "Move env variables to /etc/profile.d/"
+  become: true
+  copy:
+    src: myenv.sh
+    dest: /etc/profile.d/
