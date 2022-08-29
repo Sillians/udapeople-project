@@ -302,7 +302,7 @@ jobs:
               )
 
             export API_URL="http://${BACKEND_IP}:3030"
-            echo "API_URL = ${API_URL}"
+            echo "API_URL=${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
             cat frontend/.env
             # export API_URL="http://${BACKEND_IP}:3030"
@@ -340,7 +340,7 @@ jobs:
       - install_awscli
       - install_nodejs
       - run:
-          name: Install , Package and Deploy Backend
+          name: Install, Package and Deploy Backend
           command: |
             cd backend
             npm install
@@ -372,25 +372,25 @@ jobs:
       - checkout
       - install_nodejs
       - install_awscli
-      # - run:
-      #     name: Backend smoke test.
-      #     command: |
-      #       # your code here
-      #       BACKEND_IP=$(aws ec2 describe-instances \
-      #           --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-      #           --query 'Reservations[*].Instances[*].PublicIpAddress' \
-      #           --output text)
+      - run:
+          name: Backend smoke test.
+          command: |
+            # your code here
+            BACKEND_IP=$(aws ec2 describe-instances \
+                --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+                --query 'Reservations[*].Instances[*].PublicIpAddress' \
+                --output text)
 
-      #       export API_URL=http://${BACKEND_IP}:3030
-      #       echo ${BACKEND_IP}
-      #       echo backend-${CIRCLE_WORKFLOW_ID:0:7}
-      #       echo "${API_URL}"
-      #       if curl -s "${API_URL}/api/status" | grep "ok"
-      #       then
-      #           exit 0
-      #       else
-      #           exit 1
-      #       fi
+            export API_URL=http://${BACKEND_IP}:3030
+            echo ${BACKEND_IP}
+            echo backend-${CIRCLE_WORKFLOW_ID:0:7}
+            echo "${API_URL}"
+            if curl -s "${API_URL}/api/status" | grep "ok"
+            then
+                exit 0
+            else
+                exit 1
+            fi
       - run:
           name: Frontend smoke test.
           command: |
@@ -401,8 +401,7 @@ jobs:
             echo ${URL}
             if curl -s ${URL} | grep "Welcome"
             then
-                # Change this to 0 after the job fails
-              exit 1
+              exit 0
             else
               exit 1
             fi
