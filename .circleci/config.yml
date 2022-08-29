@@ -340,52 +340,23 @@ jobs:
       - install_awscli
       - install_nodejs
       - run:
-          name: Package Backend
+          name: Install , Package and Deploy Backend
           command: |
             cd backend
+            npm install
             npm run build
-            tar -czf artifact.tar.gz dist/* package*
             cd ..
-            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
-      - run:
-          name: Deploy backend
-          command: |
-            export TYPEORM_MIGRATIONS_DIR=./migrations
-            export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
-            export TYPEORM_MIGRATIONS=./migrations/*.ts
+
             cd .circleci/ansible
+            mkdir files
+            cd files
+            tar -C ../../../backend -czf artifact.tar.gz .
+            cd ../
+
+            echo "Contents of the inventory.txt file is ......."
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-      # - run:
-      #     name: Install , Package and Deploy Backend
-      #     command: |
-      #       cd backend
-      #       npm install
-      #       npm run build
-      #       cd ..
 
-      #       cd .circleci/ansible
-      #       mkdir files
-      #       cd files
-      #       tar -C ../../../backend -czf artifact.tar.gz .
-      #       cd ../
-
-      #       echo "Contents of the inventory.txt file is ......."
-      #       cat inventory.txt
-      #       ansible-playbook -i inventory.txt deploy-backend.yml
-
-
-      #       tar -czf artifact.tar.gz dist/* package*
-      #       cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
-      # - run:
-      #     name: Deploy backend
-      #     command: |
-      #       export TYPEORM_MIGRATIONS_DIR=./migrations
-      #       export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
-      #       export TYPEORM_MIGRATIONS=./migrations/*.ts
-      #       cd .circleci/ansible
-      #       cat inventory.txt
-      #       ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure  
       - destroy-environment
       - revert-migrations
@@ -405,7 +376,7 @@ jobs:
       #     name: Backend smoke test.
       #     command: |
       #       # your code here
-      #       export BACKEND_IP=$(aws ec2 describe-instances \
+      #       BACKEND_IP=$(aws ec2 describe-instances \
       #           --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
       #           --query 'Reservations[*].Instances[*].PublicIpAddress' \
       #           --output text)
