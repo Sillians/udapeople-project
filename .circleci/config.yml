@@ -334,26 +334,45 @@ jobs:
             - "fd:17:59:b9:4e:e3:4f:dc:dd:a7:3f:28:42:2d:9d:19"
       - attach_workspace:
           at: ~/
+      - restore_cache:
+          keys: [backend-build]
       - install_ansible
       - install_awscli
       - install_nodejs
       - run:
-          name: Install , Package and Deploy Backend
+          name: Package Backend
           command: |
             cd backend
-            npm install
             npm run build
+            tar -czf artifact.tar.gz dist/* package*
             cd ..
-
+            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+      - run:
+          name: Deploy backend
+          command: |
+            export TYPEORM_MIGRATIONS_DIR=./migrations
+            export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
+            export TYPEORM_MIGRATIONS=./migrations/*.ts
             cd .circleci/ansible
-            mkdir files
-            cd files
-            tar -C ../../../backend -czf artifact.tar.gz .
-            cd ../
-
-            echo "Contents of the inventory.txt file is ......."
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
+      # - run:
+      #     name: Install , Package and Deploy Backend
+      #     command: |
+      #       cd backend
+      #       npm install
+      #       npm run build
+      #       cd ..
+
+      #       cd .circleci/ansible
+      #       mkdir files
+      #       cd files
+      #       tar -C ../../../backend -czf artifact.tar.gz .
+      #       cd ../
+
+      #       echo "Contents of the inventory.txt file is ......."
+      #       cat inventory.txt
+      #       ansible-playbook -i inventory.txt deploy-backend.yml
 
 
       #       tar -czf artifact.tar.gz dist/* package*
@@ -412,9 +431,9 @@ jobs:
             if curl -s ${URL} | grep "Welcome"
             then
                 # Change this to 0 after the job fails
-              return 1
+              exit 1
             else
-              return 1
+              exit 1
             fi
       # Here's where you will add some code to rollback on failure
       - destroy-environment
