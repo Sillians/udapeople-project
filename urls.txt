@@ -1,12 +1,24 @@
+1- URL01
 Public Url to GitHub repository (not private) [URL01]
 URL 01 = https://github.com/Sillians/udapeople-project
 
+2- URL02
+Evidence of deployed and functioning front-end application in an S3 bucket
 URL 02 = http://udapeople-f06e599.s3-website-us-east-1.amazonaws.com
 
 URL 02 = http://udapeople-194303a.s3-website.us-east-1.amazonaws.com
 
-URL 02 = 
-URL 02 =
-URL 02 = 
 
-URL 03 = 
+3- URL03
+Evidence of deployed and functioning front-end application in CloudFront
+URL 03 = https://d1cg5saiyg8hkg.cloudfront.net
+
+
+4- URL04
+Evidence of healthy back-end application
+URL04 : http://3.82.130.240:3030/api/status
+
+
+5- URL05
+Evidence of Prometheus Server
+URL05:
