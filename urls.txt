@@ -1,12 +1,19 @@
-Public Url to GitHub repository (not private) [URL01]
-URL 01 = https://github.com/Sillians/udapeople-project
+1- URL01 
+A public git repository with my project code 
+URL01: https://github.com/Sillians/udapeople-project
 
-URL 02 = http://udapeople-f06e599.s3-website-us-east-1.amazonaws.com
+2- URL02
+Evidence of deployed and functioning front-end application in an S3 bucket
+URL02: http://udapeople-1e6007f.s3-website-us-east-1.amazonaws.com
 
-URL 02 = http://udapeople-194303a.s3-website.us-east-1.amazonaws.com
+3- URL03
+Evidence of deployed and functioning front-end application in CloudFront
+URL03: https://d1cg5saiyg8hkg.cloudfront.net
 
-URL 02 = 
-URL 02 =
-URL 02 = 
+4- URL04
+Evidence of healthy back-end application
+URL04: http://54.165.134.118:3030/api/status
 
-URL 03 = 
+5- URL05
+Evidence of Prometheus Server
+URL05:
