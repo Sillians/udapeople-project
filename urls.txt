@@ -17,3 +17,12 @@ URL04: http://54.165.134.118:3030/api/status
 5- URL05
 Evidence of Prometheus Server
 URL05: http://ec2-44-202-138-31.compute-1.amazonaws.com:9090/targets
+
+
+
+
+
+
+
+# webhook url = https://hooks.slack.com/services/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
+
