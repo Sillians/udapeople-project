@@ -18,11 +18,3 @@ URL04: http://44.202.22.68:3030/api/status
 Evidence of Prometheus Server
 URL05: http://ec2-44-211-40-70.compute-1.amazonaws.com:9090/graph
 
-
-
-
-
-
-
-# webhook url = https://hooks.slack.com/services/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
-
