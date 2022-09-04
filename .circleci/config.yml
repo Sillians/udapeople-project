@@ -109,7 +109,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-test]
+          keys: [frontend-build]
       - run:
           name: Run test front-end
           command: |
@@ -118,9 +118,9 @@ jobs:
             npm run test
             npm audit fix
             # npm audit fix --audit-level=critical
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-test
+      # - save_cache:
+      #     paths: [frontend/node_modules]
+      #     key: frontend-test
 
   test-backend:
     docker:
@@ -128,16 +128,16 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-test]
+          keys: [backend-build]
       - run:
           name: Run test backend-end
           command: |
             cd backend
             npm install
             npm run test
-      - save_cache:
-          paths: [backend/node_modules]
-          key: backend-test
+      # - save_cache:
+      #     paths: [backend/node_modules]
+      #     key: backend-test
 
   scan-frontend:
     docker:
@@ -145,7 +145,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [scan-frontend]
+          keys: [frontend-build]
       - run:
           name: Scan frontend vulnerability
           command: |
@@ -153,9 +153,9 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: scan-frontend
+      # - save_cache:
+      #     paths: [frontend/node_modules]
+      #     key: scan-frontend
 
   scan-backend:
     docker:
@@ -163,7 +163,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [scan-backend]
+          keys: [backend-build]
       - run:
           name: Scan backend vulnerability
           command: |
@@ -172,9 +172,9 @@ jobs:
             npm audit fix --audit-level=critical --force
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
-      - save_cache:
-          paths: [backend/node_modules]
-          key: scan-backend
+      # - save_cache:
+      #     paths: [backend/node_modules]
+      #     key: scan-backend
 
   deploy-infrastructure:
     docker:
@@ -335,9 +335,6 @@ jobs:
             cd backend
             npm install
             npm run build
-            # export TYPEORM_MIGRATIONS_DIR=./migrations
-            # export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
-            # export TYPEORM_MIGRATIONS=./migrations/*.ts
             cd ..
 
             cd .circleci/ansible
