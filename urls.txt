@@ -4,15 +4,15 @@ URL01: https://github.com/Sillians/udapeople-project
 
 2- URL02
 Evidence of deployed and functioning front-end application in an S3 bucket
-URL02: http://udapeople-8878388.s3-website-us-east-1.amazonaws.com
+URL02: http://udapeople-0986462.s3-website-us-east-1.amazonaws.com
 
 3- URL03
 Evidence of deployed and functioning front-end application in CloudFront
-URL03: https://d1cg5saiyg8hkg.cloudfront.net/
+URL03: http://d1cg5saiyg8hkg.cloudfront.net
 
 4- URL04
 Evidence of healthy back-end application
-URL04: http://44.202.22.68:3030/api/status
+URL04: http://54.159.103.151:3030/api/status
 
 5- URL05
 Evidence of Prometheus Server
