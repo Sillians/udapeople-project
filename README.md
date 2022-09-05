@@ -5,8 +5,7 @@ We are archiving this repository because we do not want learners to push persona
 
 ## Give your Application Auto-Deploy Superpowers
 
-[![CircleCI](https://circleci.com/gh/circleci/
-udapeople-project.svg?style=svg)] (https://app.circleci.com/pipelines/github/Sillians/udapeople-project)
+[![CircleCI](https://circleci.com/gh/Sillians/udapeople-project.svg?style=shield)](https://app.circleci.com/pipelines/github/Sillians/udapeople-project)
 
 In this project, you will prove your mastery of the following learning objectives:
 
