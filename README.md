@@ -5,6 +5,9 @@ We are archiving this repository because we do not want learners to push persona
 
 ## Give your Application Auto-Deploy Superpowers
 
+[![CircleCI](https://circleci.com/gh/circleci/
+udapeople-project.svg?style=svg)] (https://app.circleci.com/pipelines/github/Sillians/udapeople-project)
+
 In this project, you will prove your mastery of the following learning objectives:
 
 - Explain the fundamentals and benefits of CI/CD to achieve, build, and deploy automation for cloud-based software products.
@@ -24,7 +27,9 @@ In this project, you will prove your mastery of the following learning objective
 
 ### Project Submission
 
-For your submission, please submit the following:
+![Project Pipeline.](pipeline.jpg)
+
+Submission includes :
 
 - A text file named `urls.txt` including:
   1. Public Url to GitHub repository (not private) [URL01]
@@ -48,7 +53,15 @@ For your submission, please submit the following:
 
 - Your presentation should be in PDF format named "presentation.pdf" and should be included in your code repository root folder. 
 
-Before you submit your project, please check your work against the project rubric. If you haven’t satisfied each criterion in the rubric, then revise your work so that you have met all the requirements. 
+### Prerequisites
+
+- [Node JS](https://nodejs.org/en/)
+- [Docker](https://www.docker.com/)
+- [Github Account](https://github.com/)
+- [CircleCI Account](https://circleci.com/)
+- [AWS Account](https://aws.amazon.com/)
+- [kvdb api bucket](https://kvdb.io/)
+- [Slack api App](https://api.slack.com/)
 
 ### Built With
 
